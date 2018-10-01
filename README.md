@@ -1,5 +1,4 @@
+[![CircleCI](https://circleci.com/gh/GSA/catalog-solr.svg?style=svg)](https://circleci.com/gh/GSA/catalog-solr)
+
 # catalog-solr
 [See Main Project](https://github.com/GSA/catalog-app)
-
-<a href="http://drone.datagov.us/GSA/catalog-solr"><img src="http://drone.datagov.us/api/badges/GSA/catalog-solr/status.svg" /></a>
-
