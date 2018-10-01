@@ -4,4 +4,4 @@ jobs:
     machine: yes
     steps:
       - checkout
-      - make test
+      - run: make test
