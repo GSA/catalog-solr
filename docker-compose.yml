@@ -1,0 +1,11 @@
+version: '3'
+services:
+  solr:
+    build:
+      context: .
+    image: catalog-solr
+  test:
+    image: catalog-solr
+    command: curl --silent --fail --location solr:8983/solr
+    depends_on:
+      - solr
