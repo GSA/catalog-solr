@@ -1,9 +1,14 @@
-FROM solr:5.4
+FROM solr:5.5
 
-COPY schema.xml /opt/solr/server/solr/configsets/basic_configs/conf
-COPY schema.xml /opt/solr/example/solr/ckan/conf/schema.xml
+COPY solrconfig.xml /opt/solr/server/solr/configsets/basic_configs/conf/
 
-RUN /opt/solr/bin/solr start && \
-    /opt/solr/bin/solr create_core -c ckan -d basic_configs
+# Create configsets for CKAN versions
+RUN \
+  for ckan_version in ckan2_3 ckan2_5; do \
+    mkdir -p /opt/solr/server/solr/configsets/$ckan_version ; \
+    cp -r /opt/solr/server/solr/configsets/basic_configs/conf/ /opt/solr/server/solr/configsets/$ckan_version/ ; \
+  done
 
-VOLUME /var/lib/solr
+# Copy schema
+COPY schema2_3.xml /opt/solr/server/solr/configsets/ckan2_3/conf/schema.xml
+COPY schema2_5.xml /opt/solr/server/solr/configsets/ckan2_5/conf/schema.xml
