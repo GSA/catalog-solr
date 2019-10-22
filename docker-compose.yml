@@ -1,0 +1,9 @@
+version: '3'
+services:
+  solr:
+    build: .
+  test:
+    build: test
+    command: --pretty --recursive ./test
+    depends_on:
+      - solr
