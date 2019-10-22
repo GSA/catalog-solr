@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build .
+
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build
