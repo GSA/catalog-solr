@@ -16,6 +16,28 @@ function setup () {
 
 @test "solr is up" {
   curl -v --fail --silent http://solr:8983/solr
+
+  # Unfortunately, jetty/solr start listening before solr actually registers
+  # the cores, so sleep a bit before starting the tests
+  sleep 3
+}
+
+@test "ckan2_3 exists, ready for use" {
+  run curl --get --fail --silent http://solr:8983/solr/admin/cores \
+    --data-urlencode action=status \
+    --data-urlencode core=ckan2_3
+
+  [ "$status" -eq 0 ]
+  echo "$output" | grep -q segmentsFileSizeInBytes
+}
+
+@test "ckan2_5 exists, ready for use" {
+  run curl --get --fail --silent http://solr:8983/solr/admin/cores \
+    --data-urlencode action=status \
+    --data-urlencode core=ckan2_5
+
+  [ "$status" -eq 0 ]
+  echo "$output" | grep -q segmentsFileSizeInBytes
 }
 
 @test "can create ckan2_3 core" {
