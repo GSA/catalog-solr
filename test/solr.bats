@@ -40,6 +40,15 @@ function setup () {
   echo "$output" | grep -q segmentsFileSizeInBytes
 }
 
+@test "ckan2_8 exists, ready for use" {
+  run curl --get --fail --silent http://solr:8983/solr/admin/cores \
+    --data-urlencode action=status \
+    --data-urlencode core=ckan2_8
+
+  [ "$status" -eq 0 ]
+  echo "$output" | grep -q segmentsFileSizeInBytes
+}
+
 @test "can create ckan2_3 core" {
   curl -v --get --fail --silent http://solr:8983/solr/admin/cores \
     --data-urlencode action=create \
@@ -67,6 +76,22 @@ function setup () {
   run curl --get --fail --silent http://solr:8983/solr/admin/cores \
     --data-urlencode action=status \
     --data-urlencode core=ckan25
+
+  [ "$status" -eq 0 ]
+  echo "$output" | grep -q segmentsFileSizeInBytes
+}
+
+@test "can create ckan2_8 core" {
+  curl -v --get --fail --silent http://solr:8983/solr/admin/cores \
+    --data-urlencode action=create \
+    --data-urlencode name=ckan28 \
+    --data-urlencode configSet=ckan2_8
+}
+
+@test "check status of ckan2_8 core" {
+  run curl --get --fail --silent http://solr:8983/solr/admin/cores \
+    --data-urlencode action=status \
+    --data-urlencode core=ckan28
 
   [ "$status" -eq 0 ]
   echo "$output" | grep -q segmentsFileSizeInBytes
