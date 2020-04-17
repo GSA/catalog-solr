@@ -1,9 +1,29 @@
-FROM solr:5.4
+FROM solr:6.2-alpine
+MAINTAINER Open Knowledge
 
-COPY schema.xml /opt/solr/server/solr/configsets/basic_configs/conf
-COPY schema.xml /opt/solr/example/solr/ckan/conf/schema.xml
+# Enviroment
+ENV SOLR_CORE ckan
+ENV CKAN_VERSION 2.8
 
-RUN /opt/solr/bin/solr start && \
-    /opt/solr/bin/solr create_core -c ckan -d basic_configs
+# User
+USER root
 
-VOLUME /var/lib/solr
+# Create Directories
+RUN mkdir -p /opt/solr/server/solr/$SOLR_CORE/conf
+RUN mkdir -p /opt/solr/server/solr/$SOLR_CORE/data
+
+# Adding Files
+ADD solrconfig.xml \
+https://raw.githubusercontent.com/ckan/ckan/$CKAN_VERSION/ckan/config/solr/schema.xml \
+https://raw.githubusercontent.com/apache/lucene-solr/releases/lucene-solr/6.0.0/solr/server/solr/configsets/basic_configs/conf/currency.xml \
+https://raw.githubusercontent.com/apache/lucene-solr/releases/lucene-solr/6.0.0/solr/server/solr/configsets/basic_configs/conf/synonyms.txt \
+https://raw.githubusercontent.com/apache/lucene-solr/releases/lucene-solr/6.0.0/solr/server/solr/configsets/basic_configs/conf/stopwords.txt \
+https://raw.githubusercontent.com/apache/lucene-solr/releases/lucene-solr/6.0.0/solr/server/solr/configsets/basic_configs/conf/protwords.txt \
+https://raw.githubusercontent.com/apache/lucene-solr/releases/lucene-solr/6.0.0/solr/server/solr/configsets/data_driven_schema_configs/conf/elevate.xml \
+/opt/solr/server/solr/$SOLR_CORE/conf/
+
+# Create Core.properties
+RUN echo name=$SOLR_CORE > /opt/solr/server/solr/$SOLR_CORE/core.properties
+
+# Giving ownership to Solr
+RUN chown -R $SOLR_USER:$SOLR_USER /opt/solr/server/solr/$SOLR_CORE
