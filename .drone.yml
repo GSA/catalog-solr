@@ -10,6 +10,9 @@ build:
     - docker push datagov/catalog-solr:2.3.$$BUILD_NUMBER
     - docker build -t datagov/catalog-solr:latest .
     - docker push datagov/catalog-solr:latest
+    - git checkout ckan_2.8
+    - docker build -t datagov/catalog-solr:ckan_2.8 .
+    - docker push datagov/catalog-solr:ckan_2.8
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
 
